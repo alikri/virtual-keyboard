@@ -268,7 +268,8 @@ class VirtualKeyboard {
 	getCapslockKey(key) {
 		if (key) {
 			this.keyboard.innerHTML = '';
-			if (this.layout) {
+			const savedLayout = localStorage.getItem('layout'); 
+			if (savedLayout === "true") {
 				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListR);
 			} else {
 				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListE);
@@ -276,7 +277,8 @@ class VirtualKeyboard {
 			
 		} else {
 			this.keyboard.innerHTML = '';
-			if (!this.layout) {
+			const savedLayout = localStorage.getItem('layout'); 
+			if (savedLayout === "false") {
 				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListE);
 			} else {
 				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListR);
