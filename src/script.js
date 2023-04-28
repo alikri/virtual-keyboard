@@ -27,7 +27,7 @@ class VirtualKeyboard {
 		];
 		this.keyListR = [
 			[
-				['>', '<'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', '%'], ['5', ':'], ['6', ','], ['7', '.'], ['8', ';'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+']
+				['>', '<'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', '%'], ['5', ':'], ['6', ','], ['7', '.'], ['8', ';'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], ['Backspace']
 			],
 			[
 				['Tab'], ['й', 'Й'], ['ц', 'Ц'], ['у', 'У'], ['к', 'К'], ['е', 'Е'], ['н', 'Н'], ['г', 'Г'], ['ш', 'Ш'], ['щ', 'Щ'], ['з', 'З'], ['х', 'Х'], ['ъ', 'Ъ'], ['Enter']
@@ -233,8 +233,7 @@ class VirtualKeyboard {
 						break;
 					case 'CapsLock':
 					this.capsLockActive = !this.capsLockActive;
-					this.keyboard.innerHTML = '';
-					this.keyboard.innerHTML = this.toggleCapsLock(this.keyListE);
+					this.getCapslockKey(this.capsLockActive);
 					break;
 					case 'Meta':
 					this.textarea.value += '';
@@ -266,9 +265,23 @@ class VirtualKeyboard {
 			}
 	}
 
-	getShiftKey(key) {
-		const keyElement = this.keyboard.querySelector('.keyShift');
-			return keyElement.innerHTML || key;
+	getCapslockKey(key) {
+		if (key) {
+			this.keyboard.innerHTML = '';
+			if (this.layout) {
+				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListR);
+			} else {
+				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListE);
+			}
+			
+		} else {
+			this.keyboard.innerHTML = '';
+			if (!this.layout) {
+				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListE);
+			} else {
+				this.keyboard.innerHTML = this.toggleCapsLock(this.keyListR);
+			}
+		}
 	}
 
 
