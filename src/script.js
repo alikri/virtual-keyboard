@@ -5,7 +5,7 @@ class VirtualKeyboard {
 		this.container = null;
 		this.keyboard = null;
 		this.textarea = null;
-		this.layoutIndex = 0;
+		this.layout = false;
 		this.shiftPressed = false;
 		this.capsLockActive = false;
 		this.keyListE = [
@@ -41,12 +41,7 @@ class VirtualKeyboard {
 			[
 				['Control'], ['Alt', 'AltLeft'], ['Meta'], [' ', 'Space'], ['Meta'], ['Alt', 'AltRight'], [ '▼', 'ArrowLeft'], ['▼','ArrowDown'], ['▼','ArrowRight']
 			]
-		];
-
-		this.layouts = [
-			this.keyListE,
-			this.keyListR
-		];
+		]
 			
 			this.init();
 	}
@@ -70,13 +65,14 @@ class VirtualKeyboard {
 	}
 
 	switchLayout() {
-		const savedLayoutIndex = localStorage.getItem('layoutIndex');
-		if (savedLayoutIndex !== null) {
-				this.layoutIndex = parseInt(savedLayoutIndex, 10);
+		const savedLayout = localStorage.getItem('layout'); 
+		if (savedLayout === "true") {
+			this.keyboard.innerHTML = "";
+			this.keyboard.innerHTML = this.generateKeyboardHtml(this.keyListR);
 		} else {
-				this.layoutIndex = 0;
+			this.keyboard.innerHTML = "";
+			this.keyboard.innerHTML = this.generateKeyboardHtml(this.keyListE);
 		}
-		this.keyboard.innerHTML = this.generateKeyboardHtml(this.layouts[this.layoutIndex]);
 	}
 
 	generateKeyboardHtml(layout) {
@@ -126,6 +122,8 @@ class VirtualKeyboard {
 		}
 		return innerKeyboard;
 	}
+  
+
 
 	addEventListeners() {
 		this.keyboard.addEventListener('mousedown', (event) => {
@@ -163,9 +161,12 @@ class VirtualKeyboard {
 			});
 
 			document.addEventListener('keydown', (event) => {
-				event.preventDefault();
 				let keyElement;
-				
+				if (event.shiftKey && event.altKey) {
+					this.layout = !this.layout;
+					localStorage.setItem('layout', this.layout);
+					this.switchLayout()
+				}
 				if (event.code === 'Space' || event.code === 'ShiftLeft' || event.code === 'ShiftRight' || event.code === 'AltRight' || event.code === 'AltLeft'  || event.code === 'MetaLeft' || event.code === 'MetaRight') {
 					keyElement = event.code;
 				} else {
@@ -246,30 +247,18 @@ class VirtualKeyboard {
 								break;
 				case 'ShiftRight':
 					this.textarea.value += '';
-							this.shiftPressed = !this.shiftPressed;
-							// this.toggleShift();
 					break;
 					case 'Shift':
 						this.textarea.value += '';
-							this.shiftPressed = !this.shiftPressed;
-							// this.toggleShift();
 							break;
 				case 'ShiftLeft':
 					this.textarea.value += '';
-						this.shiftPressed = !this.shiftPressed;
-						// this.toggleShift();
 						break;
 				case 'Control':
 					this.textarea.value += '';
-					// this.switchLayout();
-					localStorage.setItem('layoutIndex', this.layoutIndex);
-					this.layoutIndex = (this.layoutIndex + 1) % this.layouts.length;
 					break;
 					case 'Ctrl':
 						this.textarea.value += '';
-						// this.switchLayout();
-						localStorage.setItem('layoutIndex', this.layoutIndex);
-					this.layoutIndex = 0;
 								break;
 					default:
 							this.textarea.value +=  key;
