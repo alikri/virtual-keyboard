@@ -191,13 +191,7 @@ class VirtualKeyboard {
 			let target = null;
 			const keyElement = this.container.querySelector(`.key${e.code}`);
 			if (keyElement) {
-				if (keyElement.classList.contains("keyBackspace") && this.textarea.selectionStart !== this.textarea.selectionEnd) {
-					const start = this.textarea.selectionStart;
-					const end = this.textarea.selectionEnd;
-					this.textarea.value = this.textarea.value.substring(0, start) + this.textarea.value.substring(end);
-					this.textarea.selectionStart = this.textarea.selectionEnd = start;
-					e.preventDefault();
-				}
+				this.toggleBackspace();
 				target = keyElement.childNodes;
 				target.forEach(key => {
 					if (!key.classList.contains('hidden')) {
@@ -228,6 +222,21 @@ class VirtualKeyboard {
 
 		})
 
+	}
+
+	toggleBackspace() {
+		if (keyElement.classList.contains("keyBackspace") && this.textarea.selectionStart !== this.textarea.selectionEnd) {
+			const start = this.textarea.selectionStart;
+			const end = this.textarea.selectionEnd;
+			this.textarea.value = this.textarea.value.substring(0, start) + this.textarea.value.substring(end);
+			this.textarea.selectionStart = this.textarea.selectionEnd = start;
+			e.preventDefault();
+		}
+					
+	}
+	
+	toggleShift() {
+	
 }
 
 keyPressAction(key) {
@@ -258,8 +267,6 @@ keyPressAction(key) {
 						break;
 		}
 }
-
-
 
 }
 
