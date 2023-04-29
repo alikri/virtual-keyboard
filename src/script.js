@@ -117,6 +117,8 @@ class VirtualKeyboard {
 		document.querySelector(".row3").innerHTML = this.generateKeys(this.row3)
 		document.querySelector(".row4").innerHTML = this.generateKeys(this.row4)
 		document.querySelector(".row5").innerHTML = this.generateKeys(this.row5)
+
+		this.addEventListeners()
 	}
 
 	generateKeys(row) {
@@ -141,6 +143,122 @@ class VirtualKeyboard {
 
 		return innerHtml;
 	}
+
+	addEventListeners() {
+		let keys = document.querySelectorAll(".key");
+		keys.forEach(key => key.addEventListener("mousedown", (e) => {
+			let showKey = [];
+			let target = null;
+			if (e.target.nodeName === "SPAN") {
+				target = e.target.parentElement.childNodes;
+			} else {
+				target = e.target.childNodes;
+			}
+
+			target.forEach(key => {
+				if (!key.classList.contains('hidden')) {
+					key.parentElement.classList.add('pressed');
+					this.keyPressAction(key.innerHTML);
+					showKey.push(key);
+				}
+			});
+			console.log(showKey);
+
+		}))
+
+		keys.forEach(key => key.addEventListener("mouseup", (e) => {
+			let showKey = [];
+			let target = null;
+			if (e.target.nodeName === "SPAN") {
+				target = e.target.parentElement.childNodes;
+			} else {
+				target = e.target.childNodes;
+			}
+
+			target.forEach(key => {
+				if (!key.classList.contains('hidden')) {
+					key.parentElement.classList.remove('pressed');
+					showKey.push(key);
+				}
+			});
+
+		}))
+
+
+		document.addEventListener("keydown", (e) => {
+			e.preventDefault();
+			let showKey = [];
+			let target = null;
+			const keyElement = this.container.querySelector(`.key${e.code}`);
+			if (keyElement) {
+				if (keyElement.classList.contains("keyBackspace") && this.textarea.selectionStart !== this.textarea.selectionEnd) {
+					const start = this.textarea.selectionStart;
+					const end = this.textarea.selectionEnd;
+					this.textarea.value = this.textarea.value.substring(0, start) + this.textarea.value.substring(end);
+					this.textarea.selectionStart = this.textarea.selectionEnd = start;
+					e.preventDefault();
+				}
+				target = keyElement.childNodes;
+				target.forEach(key => {
+					if (!key.classList.contains('hidden')) {
+						key.parentElement.classList.add('pressed');
+						this.keyPressAction(key.innerHTML);
+						showKey.push(key);
+					}
+				});
+				keyElement.classList.add('pressed');
+			}
+
+		})
+
+		document.addEventListener("keyup", (e) => {
+			e.preventDefault();
+			let showKey = [];
+			let target = null;
+			const keyElement = this.container.querySelector(`.key${e.code}`);
+			if (keyElement) {
+				target = keyElement.childNodes;
+				target.forEach(key => {
+					if (!key.classList.contains('hidden')) {
+						key.parentElement.classList.remove('pressed');
+						showKey.push(key);
+					}
+				});
+			}
+
+		})
+
+}
+
+keyPressAction(key) {
+		switch (key) {
+				case 'Backspace':
+						this.textarea.value = this.textarea.value.slice(0, -1);
+						break;
+				case 'Enter':
+						this.textarea.value += '\n';
+						break;
+				case 'Tab':
+						this.textarea.value += '\t';
+						break;
+				case 'CapsLock':
+						this.capsLockActive = !this.capsLockActive;
+						// this.toggleCapsLock();
+						break;
+				case 'Shift':
+						this.shiftPressed = !this.shiftPressed;
+						// this.toggleShift();
+						break;
+				case 'Ctrl':
+						// this.switchLayout();
+						localStorage.setItem('layoutIndex', this.layoutIndex);
+						break;
+				default:
+					this.textarea.value += this.capsLockActive ? key.toUpperCase() : key;
+						break;
+		}
+}
+
 
 
 }
