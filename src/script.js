@@ -191,7 +191,7 @@ class VirtualKeyboard {
 			let target = null;
 			const keyElement = this.container.querySelector(`.key${e.code}`);
 			if (keyElement) {
-				this.toggleBackspace();
+				this.toggleBackspace(keyElement);
 				target = keyElement.childNodes;
 				target.forEach(key => {
 					if (!key.classList.contains('hidden')) {
@@ -224,7 +224,7 @@ class VirtualKeyboard {
 
 	}
 
-	toggleBackspace() {
+	toggleBackspace(keyElement) {
 		if (keyElement.classList.contains("keyBackspace") && this.textarea.selectionStart !== this.textarea.selectionEnd) {
 			const start = this.textarea.selectionStart;
 			const end = this.textarea.selectionEnd;
@@ -234,10 +234,7 @@ class VirtualKeyboard {
 		}
 					
 	}
-	
-	toggleShift() {
-	
-}
+
 
 keyPressAction(key) {
 		switch (key) {
