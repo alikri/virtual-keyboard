@@ -205,6 +205,7 @@ class VirtualKeyboard {
 
 			target.forEach(key => {
 				if (!key.classList.contains('hidden')) {
+					if (this.capsLockActive && key.parentElement.classList.contains("keyCapsLock")) return;
 					key.parentElement.classList.remove('pressed');
 					showKey.push(key);
 				}
@@ -247,6 +248,7 @@ class VirtualKeyboard {
 				target = keyElement.childNodes;
 				target.forEach(key => {
 					if (!key.classList.contains('hidden')) {
+						if (this.capsLockActive && key.parentElement.classList.contains("keyCapsLock")) return;
 						key.parentElement.classList.remove('pressed');
 						showKey.push(key);
 					}
