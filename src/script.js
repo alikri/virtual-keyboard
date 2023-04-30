@@ -90,8 +90,6 @@ class VirtualKeyboard {
       ArrowDown: ['▼', '▼', '▼', '▼'],
       ArrowRight: ['►', '►', '►', '►'],
     };
-
-    this.generateHtml();
   }
 
   generateHtml() {
@@ -352,5 +350,7 @@ class VirtualKeyboard {
   }
 }
 
-const virtualKeyboard = new VirtualKeyboard();
-virtualKeyboard.init();
+document.addEventListener('DOMContentLoaded', () => {
+  const virtualKeyboard = new VirtualKeyboard();
+  virtualKeyboard.generateHtml();
+});
