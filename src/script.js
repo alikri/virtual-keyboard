@@ -129,13 +129,13 @@ class VirtualKeyboard {
 			let innerKey = '';
 			for (let i = 0; i < layout.length; i++) {
 				if (i === 0) {
-					innerKey += `<span class="eng letter">${layout[i]}</span>`
+					innerKey += `<span class="eng">${layout[i]}</span>`
 				} else if (i === 1) {
-					innerKey += `<span class="engB letter hidden">${layout[i]}</span>`
+					innerKey += `<span class="engB hidden">${layout[i]}</span>`
 				} else if (i === 2) {
-					innerKey += `<span class="rus letter hidden">${layout[i]}</span>`
+					innerKey += `<span class="rus hidden">${layout[i]}</span>`
 				} else {
-					innerKey += `<span class="rusB letter hidden">${layout[i]}</span>`
+					innerKey += `<span class="rusB hidden">${layout[i]}</span>`
 				}
 			
 			}
@@ -150,20 +150,30 @@ class VirtualKeyboard {
 		keys.forEach(key => key.addEventListener("mousedown", (e) => {
 			let showKey = [];
 			let target = null;
+			let isCapslock = false;
 			if (e.target.nodeName === "SPAN") {
 				target = e.target.parentElement.childNodes;
+				if (e.target.parentElement.classList.contains("keyCapsLock")) {
+					isCapslock = true;
+				}
 			} else {
 				target = e.target.childNodes;
+				if (e.target.classList.contains("keyCapsLock")) {
+					isCapslock = true;
+				}
 			}
-
+			if (isCapslock) {
+				this.capsLockActive = !this.capsLockActive;
+				this.toggleCapsLock();
+			}
 			target.forEach(key => {
 				if (!key.classList.contains('hidden')) {
 					key.parentElement.classList.add('pressed');
 					this.keyPressAction(key.innerHTML);
+					console.log(key.parentElement.classList);
 					showKey.push(key);
 				}
 			});
-			console.log(showKey);
 
 		}))
 
@@ -202,6 +212,10 @@ class VirtualKeyboard {
 						showKey.push(key);
 					}
 				});
+				if (keyElement.classList.contains("keyCapsLock")) {
+					this.capsLockActive = !this.capsLockActive;
+					this.toggleCapsLock();
+				}
 				keyElement.classList.add('pressed');
 			}
 
@@ -240,11 +254,18 @@ class VirtualKeyboard {
 	toggleShift(event) {
 		if (event.shiftKey && event.altKey) {
 			this.rusLayout = !this.rusLayout;
-			let keysEng = document.querySelectorAll(".eng");
-			let keysRus = document.querySelectorAll(".rus");
-			console.log('entered');
-			keysEng.forEach(key => key.classList.toggle("hidden"));
-			keysRus.forEach(key => key.classList.toggle("hidden"));
+			if (this.capsLockActive) {
+				let keysEngBig = document.querySelectorAll(".engB");
+				let keysRusBig = document.querySelectorAll(".rusB");
+				keysEngBig.forEach(key => key.classList.toggle("hidden"));
+				keysRusBig.forEach(key => key.classList.toggle("hidden"));
+			} else {
+				let keysEng = document.querySelectorAll(".eng");
+				let keysRus = document.querySelectorAll(".rus");
+				keysEng.forEach(key => key.classList.toggle("hidden"));
+				keysRus.forEach(key => key.classList.toggle("hidden"));
+			}
+			
 			
 		}
 }
@@ -262,22 +283,38 @@ keyPressAction(key) {
 						this.textarea.value += '\t';
 						break;
 				case 'CapsLock':
-						this.capsLockActive = !this.capsLockActive;
-						// this.toggleCapsLock();
+				this.textarea.value += '';
 						break;
 				case 'Shift':
-						this.shiftPressed = !this.shiftPressed;
-						// this.toggleShift();
+				this.textarea.value += '';
 						break;
 				case 'Ctrl':
-						// this.switchLayout();
-						localStorage.setItem('layoutIndex', this.layoutIndex);
+				this.textarea.value += '';
 						break;
 				default:
 					this.textarea.value += this.capsLockActive ? key.toUpperCase() : key;
 						break;
 		}
 }
+	
+	
+	toggleCapsLock() {
+		let keysSmallRus = document.querySelectorAll(".rus");
+		let keysBigRus = document.querySelectorAll(".rusB");
+		let keysSmallEng = document.querySelectorAll(".eng");
+		let keysBigEng = document.querySelectorAll(".engB");
+
+		if (this.rusLayout) {
+
+			keysSmallRus.forEach(key => key.classList.toggle("hidden"));
+			keysBigRus.forEach(key => key.classList.toggle("hidden"));
+		} else  {
+
+			keysSmallEng.forEach(key => key.classList.toggle("hidden"));
+			keysBigEng.forEach(key => key.classList.toggle("hidden"));
+
+		} 
+	} 
 
 }
 
