@@ -4,7 +4,8 @@ class VirtualKeyboard {
 		this.container = null;
 		this.keyboard = null;
 		this.textarea = null;
-		this.layout = false;
+		this.rusLayout = false;
+		this.uppercase = false;
 		this.shiftPressed = false;
 		this.capsLockActive = false;
 		this.row1 = {
@@ -128,13 +129,13 @@ class VirtualKeyboard {
 			let innerKey = '';
 			for (let i = 0; i < layout.length; i++) {
 				if (i === 0) {
-					innerKey += `<span class="eng">${layout[i]}</span>`
+					innerKey += `<span class="eng letter">${layout[i]}</span>`
 				} else if (i === 1) {
-					innerKey += `<span class="engB hidden">${layout[i]}</span>`
+					innerKey += `<span class="engB letter hidden">${layout[i]}</span>`
 				} else if (i === 2) {
-					innerKey += `<span class="rus hidden">${layout[i]}</span>`
+					innerKey += `<span class="rus letter hidden">${layout[i]}</span>`
 				} else {
-					innerKey += `<span class="rusB hidden">${layout[i]}</span>`
+					innerKey += `<span class="rusB letter hidden">${layout[i]}</span>`
 				}
 			
 			}
@@ -189,6 +190,7 @@ class VirtualKeyboard {
 			e.preventDefault();
 			let showKey = [];
 			let target = null;
+			this.toggleShift(e);
 			const keyElement = this.container.querySelector(`.key${e.code}`);
 			if (keyElement) {
 				this.toggleBackspace(keyElement);
@@ -230,10 +232,22 @@ class VirtualKeyboard {
 			const end = this.textarea.selectionEnd;
 			this.textarea.value = this.textarea.value.substring(0, start) + this.textarea.value.substring(end);
 			this.textarea.selectionStart = this.textarea.selectionEnd = start;
-			e.preventDefault();
+			
 		}
 					
 	}
+
+	toggleShift(event) {
+		if (event.shiftKey && event.altKey) {
+			this.rusLayout = !this.rusLayout;
+			let keysEng = document.querySelectorAll(".eng");
+			let keysRus = document.querySelectorAll(".rus");
+			console.log('entered');
+			keysEng.forEach(key => key.classList.toggle("hidden"));
+			keysRus.forEach(key => key.classList.toggle("hidden"));
+			
+		}
+}
 
 
 keyPressAction(key) {
