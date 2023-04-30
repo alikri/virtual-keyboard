@@ -170,7 +170,6 @@ class VirtualKeyboard {
 				if (!key.classList.contains('hidden')) {
 					key.parentElement.classList.add('pressed');
 					this.keyPressAction(key.innerHTML);
-					console.log(key.parentElement.classList);
 					showKey.push(key);
 				}
 			});
@@ -284,7 +283,16 @@ keyPressAction(key) {
 						break;
 				case 'CapsLock':
 				this.textarea.value += '';
-						break;
+				break;
+				case 'Command':
+				this.textarea.value += '';
+				break;
+				case 'Option':
+					this.textarea.value += '';
+				break;
+				case 'Control':
+					this.textarea.value += '';
+							break;
 				case 'Shift':
 				this.textarea.value += '';
 						break;
