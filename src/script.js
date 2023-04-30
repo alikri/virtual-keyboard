@@ -53,7 +53,7 @@ class VirtualKeyboard {
     'KeyK': ['k', 'K', 'л', 'Л'],
     'KeyL': ['l', 'L', 'д', 'Д'],
 		'Semicolon': [';', ':', 'ж', 'Ж'],
-		'Quote':['\'','\"','э', 'Э'],
+		'Quote':['\'','"','э', 'Э'],
     'Backslash': ['\\', '|', 'ё', 'Ё'],
 		}
 
@@ -76,10 +76,9 @@ class VirtualKeyboard {
 
 		this.row5 = {
 			'ControlLeft': ['Control', 'Control', 'Control', 'Control'],
-			'MetaLeft': ['Command', 'Command', 'Command', 'Command'],
 			'AltLeft': ['Option', 'Option', 'Option', 'Option'],
+			'MetaLeft': ['Command', 'Command', 'Command', 'Command'],
 			'Space': [' ', ' ', ' ', ' '],
-			'AltRight': ['Option', 'Option', 'Option', 'Option'],
 			'MetaRight': ['Command', 'Command', 'Command', 'Command'],
 			'AltRight': ['Option', 'Option', 'Option', 'Option'],
 			'ArrowLeft': ['◄', '◄', '◄', '◄'],
