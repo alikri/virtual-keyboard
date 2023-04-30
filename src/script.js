@@ -126,39 +126,52 @@ class VirtualKeyboard {
 
   generateKeys(row) {
     let innerHtml = '';
-    for (const key in row) {
-      const layout = row[key];
+
+    Object.entries(row).forEach(([key, layout]) => {
       let innerKey = '';
 
-      const rusLayout = localStorage.getItem('rusLayout');
-      if (rusLayout === 'true') {
+      const rusLayout = localStorage.getItem('rusLayout') === 'true';
+
+      if (rusLayout) {
         this.rusLayout = true;
-        for (let i = 0; i < layout.length; i++) {
-          if (i === 0) {
-            innerKey += `<span class="eng hidden">${layout[i]}</span>`;
-          } else if (i === 1) {
-            innerKey += `<span class="engB hidden">${layout[i]}</span>`;
-          } else if (i === 2) {
-            innerKey += `<span class="rus">${layout[i]}</span>`;
-          } else {
-            innerKey += `<span class="rusB hidden">${layout[i]}</span>`;
-          }
-        }
-      } else {
-        for (let i = 0; i < layout.length; i++) {
-          if (i === 0) {
-            innerKey += `<span class="eng">${layout[i]}</span>`;
-          } else if (i === 1) {
-            innerKey += `<span class="engB hidden">${layout[i]}</span>`;
-          } else if (i === 2) {
-            innerKey += `<span class="rus hidden">${layout[i]}</span>`;
-          } else {
-            innerKey += `<span class="rusB hidden">${layout[i]}</span>`;
-          }
-        }
       }
+
+      if (this.rusLayout) {
+        layout.forEach((item, i) => {
+          let classes = '';
+
+          if (i === 0) {
+            classes = 'eng hidden';
+          } else if (i === 1) {
+            classes = 'engB hidden';
+          } else if (i === 2) {
+            classes = 'rus';
+          } else {
+            classes = 'rusB hidden';
+          }
+
+          innerKey += `<span class="${classes}">${item}</span>`;
+        });
+      } else {
+        layout.forEach((item, i) => {
+          let classes = '';
+
+          if (i === 0) {
+            classes = 'eng';
+          } else if (i === 1) {
+            classes = 'engB hidden';
+          } else if (i === 2) {
+            classes = 'rus hidden';
+          } else {
+            classes = 'rusB hidden';
+          }
+
+          innerKey += `<span class="${classes}">${item}</span>`;
+        });
+      }
+
       innerHtml += `<div class="key${key} key">${innerKey}</div>`;
-    }
+    });
 
     return innerHtml;
   }
@@ -166,7 +179,6 @@ class VirtualKeyboard {
   addEventListeners() {
     const keys = document.querySelectorAll('.key');
     keys.forEach((key) => key.addEventListener('mousedown', (e) => {
-      const showKey = [];
       let target = null;
       let isCapslock = false;
       if (e.target.nodeName === 'SPAN') {
@@ -184,17 +196,15 @@ class VirtualKeyboard {
         this.capsLockActive = !this.capsLockActive;
         this.toggleCapsLock();
       }
-      target.forEach((key) => {
-        if (!key.classList.contains('hidden')) {
-          key.parentElement.classList.add('pressed');
-          this.keyPressAction(key.innerHTML);
-          showKey.push(key);
+      target.forEach((item) => {
+        if (!item.classList.contains('hidden')) {
+          item.parentElement.classList.add('pressed');
+          this.keyPressAction(item.innerHTML);
         }
       });
     }));
 
     keys.forEach((key) => key.addEventListener('mouseup', (e) => {
-      const showKey = [];
       let target = null;
       if (e.target.nodeName === 'SPAN') {
         target = e.target.parentElement.childNodes;
@@ -202,11 +212,10 @@ class VirtualKeyboard {
         target = e.target.childNodes;
       }
 
-      target.forEach((key) => {
-        if (!key.classList.contains('hidden')) {
-          if (this.capsLockActive && key.parentElement.classList.contains('keyCapsLock')) return;
-          key.parentElement.classList.remove('pressed');
-          showKey.push(key);
+      target.forEach((letter) => {
+        if (!letter.classList.contains('hidden')) {
+          if (this.capsLockActive && letter.parentElement.classList.contains('keyCapsLock')) return;
+          letter.parentElement.classList.remove('pressed');
         }
       });
     }));
