@@ -1,8 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-multi-assign */
-/* eslint-disable max-len */
-/* eslint-disable no-undef */
 class VirtualKeyboard {
   constructor() {
     this.wrapper = null;
@@ -118,7 +113,7 @@ class VirtualKeyboard {
     this.container.appendChild(info);
     this.container.appendChild(detail);
     const rowsCount = 5;
-    for (let i = 0; i < rowsCount; i++) {
+    for (let i = 0; i < rowsCount; i += 1) {
       const row = document.createElement('div');
       row.classList.add('row');
       row.classList.add(`row${i + 1}`);
@@ -276,8 +271,11 @@ class VirtualKeyboard {
     if (keyElement.classList.contains('keyBackspace') && this.textarea.selectionStart !== this.textarea.selectionEnd) {
       const start = this.textarea.selectionStart;
       const end = this.textarea.selectionEnd;
-      this.textarea.value = this.textarea.value.substring(0, start) + this.textarea.value.substring(end);
-      this.textarea.selectionStart = this.textarea.selectionEnd = start;
+      const { value } = this.textarea;
+      const newValue = value.substring(0, start) + value.substring(end);
+      this.textarea.value = newValue;
+      this.textarea.selectionStart = start;
+      this.textarea.selectionEnd = start;
     }
   }
 
