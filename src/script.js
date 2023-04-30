@@ -127,17 +127,35 @@ class VirtualKeyboard {
 		for (let key in row) {
 			let layout = row[key];
 			let innerKey = '';
-			for (let i = 0; i < layout.length; i++) {
-				if (i === 0) {
-					innerKey += `<span class="eng">${layout[i]}</span>`
-				} else if (i === 1) {
-					innerKey += `<span class="engB hidden">${layout[i]}</span>`
-				} else if (i === 2) {
-					innerKey += `<span class="rus hidden">${layout[i]}</span>`
-				} else {
-					innerKey += `<span class="rusB hidden">${layout[i]}</span>`
+
+			let rusLayout = localStorage.getItem('rusLayout');
+			if (rusLayout === "true") {
+				this.rusLayout = true;
+				for (let i = 0; i < layout.length; i++) {
+					if (i === 0) {
+						innerKey += `<span class="eng hidden">${layout[i]}</span>`
+					} else if (i === 1) {
+						innerKey += `<span class="engB hidden">${layout[i]}</span>`
+					} else if (i === 2) {
+						innerKey += `<span class="rus">${layout[i]}</span>`
+					} else {
+						innerKey += `<span class="rusB hidden">${layout[i]}</span>`
+					}
+				
 				}
-			
+			} else {
+				for (let i = 0; i < layout.length; i++) {
+					if (i === 0) {
+						innerKey += `<span class="eng">${layout[i]}</span>`
+					} else if (i === 1) {
+						innerKey += `<span class="engB hidden">${layout[i]}</span>`
+					} else if (i === 2) {
+						innerKey += `<span class="rus hidden">${layout[i]}</span>`
+					} else {
+						innerKey += `<span class="rusB hidden">${layout[i]}</span>`
+					}
+				
+				}
 			}
 			innerHtml += `<div class="key${key} key">${innerKey}</div>`;
 		}
@@ -247,12 +265,13 @@ class VirtualKeyboard {
 			this.textarea.selectionStart = this.textarea.selectionEnd = start;
 			
 		}
-					
+
 	}
 
 	toggleShift(event) {
 		if (event.shiftKey && event.altKey) {
 			this.rusLayout = !this.rusLayout;
+			localStorage.setItem('rusLayout', this.rusLayout);
 			if (this.capsLockActive) {
 				let keysEngBig = document.querySelectorAll(".engB");
 				let keysRusBig = document.querySelectorAll(".rusB");
@@ -313,7 +332,6 @@ keyPressAction(key) {
 		let keysBigEng = document.querySelectorAll(".engB");
 
 		if (this.rusLayout) {
-
 			keysSmallRus.forEach(key => key.classList.toggle("hidden"));
 			keysBigRus.forEach(key => key.classList.toggle("hidden"));
 		} else  {
