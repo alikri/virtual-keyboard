@@ -99,14 +99,26 @@ class VirtualKeyboard {
     this.wrapper.classList.add('wrapper');
     this.container = document.createElement('div');
     this.container.classList.add('container');
+    const header = document.createElement('h1');
+    const info = document.createElement('p');
+    info.classList.add('details');
+    info.innerText = 'Клавиатура создана на операционной системе macOS (del клавиши нет)';
+    const detail = document.createElement('p');
+    detail.innerText = 'Для переклюения языка комбинация: левые Shift + Option';
+    detail.classList.add('details');
+    header.classList.add('title');
+    header.innerText = 'Виртуальная клавиатура';
     this.keyboard = document.createElement('div');
     this.textarea = document.createElement('textarea');
     document.body.prepend(this.wrapper);
     this.textarea.classList.add('textarea');
     this.keyboard.classList.add('keyboard');
     this.wrapper.appendChild(this.container);
+    this.container.appendChild(header);
     this.container.appendChild(this.textarea);
     this.container.appendChild(this.keyboard);
+    this.container.appendChild(info);
+    this.container.appendChild(detail);
     const rowsCount = 5;
     for (let i = 0; i < rowsCount; i++) {
       const row = document.createElement('div');
