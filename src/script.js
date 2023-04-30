@@ -91,10 +91,10 @@ class VirtualKeyboard {
       ArrowRight: ['►', '►', '►', '►'],
     };
 
-    this.init();
+    this.generateHtml();
   }
 
-  init() {
+  generateHtml() {
     this.wrapper = document.createElement('div');
     this.wrapper.classList.add('wrapper');
     this.container = document.createElement('div');
@@ -340,4 +340,5 @@ class VirtualKeyboard {
   }
 }
 
-new VirtualKeyboard();
+const virtualKeyboard = new VirtualKeyboard();
+virtualKeyboard.init();
