@@ -186,9 +186,11 @@ class VirtualKeyboard {
     const keys = document.querySelectorAll('.key');
     keys.forEach((key) => key.addEventListener('mousedown', (e) => {
       let target = null;
+      let parent = null;
       let isCapslock = false;
       let isShift = false;
       if (e.target.nodeName === 'SPAN') {
+        parent = e.target.parentElement;
         target = e.target.parentElement.childNodes;
         if (e.target.parentElement.classList.contains('keyCapsLock')) {
           isCapslock = true;
@@ -196,6 +198,7 @@ class VirtualKeyboard {
           isShift = true;
         }
       } else {
+        parent = e.target;
         target = e.target.childNodes;
         if (e.target.classList.contains('keyCapsLock')) {
           isCapslock = true;
@@ -203,6 +206,7 @@ class VirtualKeyboard {
           isShift = true;
         }
       }
+      this.toggleBackspace(parent);
       if (isCapslock || (!document.querySelector('.keyCapsLock').classList.contains('pressed') && isShift)) {
         this.capsLockActive = !this.capsLockActive;
         this.toggleCapsLock();
