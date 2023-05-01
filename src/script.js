@@ -98,7 +98,7 @@ class VirtualKeyboard {
     info.classList.add('details');
     info.innerText = 'Клавиатура создана на операционной системе macOS (del клавишу добавила дополнительно)';
     const detail = document.createElement('p');
-    detail.innerText = 'Для переклюения языка комбинация: левые Shift + Option (alt)';
+    detail.innerText = 'Для переклюения языка комбинация: левые Ctrl + Option (alt)';
     detail.classList.add('details');
     header.classList.add('title');
     header.innerText = 'Виртуальная клавиатура';
@@ -245,7 +245,7 @@ class VirtualKeyboard {
             this.keyPressAction(key.innerHTML);
           }
         });
-        if (keyElement.classList.contains('keyCapsLock')) {
+        if ((keyElement.classList.contains('keyCapsLock')) || (!this.capsLockActive && keyElement.classList.contains('keyShiftLeft'))) {
           this.capsLockActive = !this.capsLockActive;
           this.toggleCapsLock();
         }
@@ -268,6 +268,11 @@ class VirtualKeyboard {
           if (!key.classList.contains('hidden')) {
             if (this.capsLockActive && key.parentElement.classList.contains('keyCapsLock')) return;
             key.parentElement.classList.remove('pressed');
+            if (!document.querySelector('.keyCapsLock').classList.contains('pressed') && keyElement.classList.contains('keyShiftLeft')) {
+              this.capsLockActive = !this.capsLockActive;
+              this.toggleCapsLock();
+              key.parentElement.classList.remove('pressed');
+            }
           }
         });
       }
@@ -287,7 +292,7 @@ class VirtualKeyboard {
   }
 
   toggleShift(event) {
-    if (event.shiftKey && event.altKey) {
+    if (event.ctrlKey && event.altKey) {
       this.rusLayout = !this.rusLayout;
       localStorage.setItem('rusLayout', this.rusLayout);
       if (this.capsLockActive) {
