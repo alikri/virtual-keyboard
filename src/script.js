@@ -98,7 +98,7 @@ class VirtualKeyboard {
     info.classList.add('details');
     info.innerText = 'Клавиатура создана на операционной системе macOS (del клавишу добавила дополнительно)';
     const detail = document.createElement('p');
-    detail.innerText = 'Для переклюения языка комбинация: левые Ctrl + Option (alt)';
+    detail.innerText = 'Для переключения языка комбинация: левые Ctrl + Option (alt)';
     detail.classList.add('details');
     header.classList.add('title');
     header.innerText = 'Виртуальная клавиатура';
