@@ -187,18 +187,23 @@ class VirtualKeyboard {
     keys.forEach((key) => key.addEventListener('mousedown', (e) => {
       let target = null;
       let isCapslock = false;
+      let isShift = false;
       if (e.target.nodeName === 'SPAN') {
         target = e.target.parentElement.childNodes;
         if (e.target.parentElement.classList.contains('keyCapsLock')) {
           isCapslock = true;
+        } else if (e.target.parentElement.classList.contains('keyShiftLeft')) {
+          isShift = true;
         }
       } else {
         target = e.target.childNodes;
         if (e.target.classList.contains('keyCapsLock')) {
           isCapslock = true;
+        } else if (e.target.classList.contains('keyShiftLeft')) {
+          isShift = true;
         }
       }
-      if (isCapslock) {
+      if (isCapslock || (!document.querySelector('.keyCapsLock').classList.contains('pressed') && isShift)) {
         this.capsLockActive = !this.capsLockActive;
         this.toggleCapsLock();
       }
@@ -211,13 +216,19 @@ class VirtualKeyboard {
     }));
 
     keys.forEach((key) => key.addEventListener('mouseup', (e) => {
+      let parent = null;
       let target = null;
       if (e.target.nodeName === 'SPAN') {
+        parent = e.target.parentElement;
         target = e.target.parentElement.childNodes;
       } else {
+        parent = e.target;
         target = e.target.childNodes;
       }
-
+      if (!document.querySelector('.keyCapsLock').classList.contains('pressed') && parent.classList.contains('keyShiftLeft')) {
+        this.capsLockActive = !this.capsLockActive;
+        this.toggleCapsLock();
+      }
       target.forEach((letter) => {
         if (!letter.classList.contains('hidden')) {
           if (this.capsLockActive && letter.parentElement.classList.contains('keyCapsLock')) return;
