@@ -55,6 +55,7 @@ class VirtualKeyboard {
       Semicolon: [';', ':', 'ж', 'Ж'],
       Quote: ['\'', '"', 'э', 'Э'],
       Backslash: ['\\', '|', 'ё', 'Ё'],
+      Del: ['Del', 'Del', 'Del', 'Del'],
     };
 
     this.row4 = {
@@ -95,9 +96,9 @@ class VirtualKeyboard {
     const header = document.createElement('h1');
     const info = document.createElement('p');
     info.classList.add('details');
-    info.innerText = 'Клавиатура создана на операционной системе macOS (del клавиши нет)';
+    info.innerText = 'Клавиатура создана на операционной системе macOS (del клавишу добавила дополнительно)';
     const detail = document.createElement('p');
-    detail.innerText = 'Для переклюения языка комбинация: левые Shift + Option';
+    detail.innerText = 'Для переклюения языка комбинация: левые Shift + Option (alt)';
     detail.classList.add('details');
     header.classList.add('title');
     header.innerText = 'Виртуальная клавиатура';
@@ -227,10 +228,14 @@ class VirtualKeyboard {
 
     document.addEventListener('keydown', (e) => {
       e.preventDefault();
-      const showKey = [];
+      let keyElement = null;
       let target = null;
       this.toggleShift(e);
-      const keyElement = this.container.querySelector(`.key${e.code}`);
+      if (e.code === 'Delete') {
+        keyElement = this.container.querySelector('.keyDel');
+      } else {
+        keyElement = this.container.querySelector(`.key${e.code}`);
+      }
       if (keyElement) {
         this.toggleBackspace(keyElement);
         target = keyElement.childNodes;
@@ -238,7 +243,6 @@ class VirtualKeyboard {
           if (!key.classList.contains('hidden')) {
             key.parentElement.classList.add('pressed');
             this.keyPressAction(key.innerHTML);
-            showKey.push(key);
           }
         });
         if (keyElement.classList.contains('keyCapsLock')) {
@@ -251,16 +255,19 @@ class VirtualKeyboard {
 
     document.addEventListener('keyup', (e) => {
       e.preventDefault();
-      const showKey = [];
+      let keyElement = null;
       let target = null;
-      const keyElement = this.container.querySelector(`.key${e.code}`);
+      if (e.code === 'Delete') {
+        keyElement = this.container.querySelector('.keyDel');
+      } else {
+        keyElement = this.container.querySelector(`.key${e.code}`);
+      }
       if (keyElement) {
         target = keyElement.childNodes;
         target.forEach((key) => {
           if (!key.classList.contains('hidden')) {
             if (this.capsLockActive && key.parentElement.classList.contains('keyCapsLock')) return;
             key.parentElement.classList.remove('pressed');
-            showKey.push(key);
           }
         });
       }
@@ -314,6 +321,9 @@ class VirtualKeyboard {
       case 'Command':
         this.textarea.value += '';
         break;
+      case 'Del':
+        this.handleDelBtn();
+        break;
       case 'Option':
         this.textarea.value += '';
         break;
@@ -330,6 +340,14 @@ class VirtualKeyboard {
         this.textarea.value += this.capsLockActive ? key.toUpperCase() : key;
         break;
     }
+  }
+
+  handleDelBtn() {
+    const cursorPosition = this.textarea.selectionStart;
+    const beforeCursor = this.textarea.value.slice(0, cursorPosition);
+    const afterCursor = this.textarea.value.slice(cursorPosition + 1);
+    this.textarea.value = `${beforeCursor}${afterCursor}`;
+    this.textarea.setSelectionRange(cursorPosition, cursorPosition);
   }
 
   toggleCapsLock() {
