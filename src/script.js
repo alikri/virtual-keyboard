@@ -330,6 +330,7 @@ class VirtualKeyboard {
         this.textarea.value = this.textarea.value.slice(0, -1);
         break;
       case 'Enter':
+        event.preventDefault();
         this.textarea.value += '\n';
         break;
       case 'Tab':
