@@ -210,7 +210,7 @@ class VirtualKeyboard {
       target.forEach((item) => {
         if (!item.classList.contains('hidden')) {
           item.parentElement.classList.add('pressed');
-          this.keyPressAction(item.innerHTML);
+          this.keyPressAction(item.innerHTML, e);
         }
       });
     }));
@@ -253,7 +253,7 @@ class VirtualKeyboard {
         target.forEach((key) => {
           if (!key.classList.contains('hidden')) {
             key.parentElement.classList.add('pressed');
-            this.keyPressAction(key.innerHTML);
+            this.keyPressAction(key.innerHTML, e);
           }
         });
         if ((keyElement.classList.contains('keyCapsLock')) || (!this.capsLockActive && keyElement.classList.contains('keyShiftLeft'))) {
@@ -320,7 +320,7 @@ class VirtualKeyboard {
     }
   }
 
-  keyPressAction(key) {
+  keyPressAction(key, event) {
     switch (key) {
       case 'Backspace':
         this.textarea.value = this.textarea.value.slice(0, -1);
@@ -329,6 +329,7 @@ class VirtualKeyboard {
         this.textarea.value += '\n';
         break;
       case 'Tab':
+        event.preventDefault();
         this.textarea.value += '\t';
         break;
       case 'CapsLock':
