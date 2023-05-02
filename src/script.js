@@ -9,7 +9,7 @@ class VirtualKeyboard {
     this.shiftPressed = false;
     this.capsLockActive = false;
     this.row1 = {
-      Paragraph: ['§', '±', '§', '±'],
+      Backquote: ['§', '±', '§', '±'],
       Digit1: ['1', '!', '1', '!'],
       Digit2: ['2', '@', '2', '№'],
       Digit3: ['3', '#', '3', ';'],
