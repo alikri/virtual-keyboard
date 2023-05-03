@@ -325,51 +325,58 @@ class VirtualKeyboard {
   }
 
   keyPressAction(key, event) {
+    const cursorPos = this.textarea.selectionStart;
+    const beforeCursor = this.textarea.value.substring(0, cursorPos);
+    const afterCursor = this.textarea.value.substring(cursorPos);
+
     switch (key) {
-      case 'Backspace':
-        this.textarea.value = this.textarea.value.slice(0, -1);
+      case 'Backspace': {
+        this.textarea.value = beforeCursor.slice(0, -1) + afterCursor;
+        this.textarea.selectionStart = cursorPos - 1;
+        this.textarea.selectionEnd = cursorPos - 1;
         break;
-      case 'Enter':
+      }
+      case 'Enter': {
         event.preventDefault();
-        this.textarea.value += '\n';
+        this.textarea.value = `${beforeCursor}\n${afterCursor}`;
         break;
-      case 'Tab':
+      }
+      case 'Tab': {
         event.preventDefault();
-        this.textarea.value += '\t';
+        this.textarea.value = `${beforeCursor}\t${afterCursor}`;
         break;
+      }
       case 'CapsLock':
-        this.textarea.value += '';
-        break;
       case 'Command':
-        this.textarea.value += '';
+      case 'Option':
+      case 'Control':
+      case 'Shift':
+      case 'Ctrl': {
+        this.textarea.value = `${beforeCursor}${afterCursor}`;
         break;
-      case 'Del':
+      }
+      case 'Del': {
         this.handleDelBtn();
         break;
-      case 'Option':
-        this.textarea.value += '';
+      }
+      case '>': {
+        this.textarea.value = `${beforeCursor}>${afterCursor}`;
         break;
-      case '&gt;':
-        this.textarea.value += '>';
+      }
+      case '<': {
+        this.textarea.value = `${beforeCursor}<${afterCursor}`;
         break;
-      case '&lt;':
-        this.textarea.value += '<';
+      }
+      case '&': {
+        this.textarea.value = `${beforeCursor}&${afterCursor}`;
         break;
-      case '&amp;':
-        this.textarea.value += '&';
+      }
+      default: {
+        this.textarea.value = `${beforeCursor}${this.capsLockActive ? key.toUpperCase() : key}${afterCursor}`;
+        this.textarea.selectionStart = cursorPos + 1;
+        this.textarea.selectionEnd = cursorPos + 1;
         break;
-      case 'Control':
-        this.textarea.value += '';
-        break;
-      case 'Shift':
-        this.textarea.value += '';
-        break;
-      case 'Ctrl':
-        this.textarea.value += '';
-        break;
-      default:
-        this.textarea.value += this.capsLockActive ? key.toUpperCase() : key;
-        break;
+      }
     }
   }
 
